@@ -63,6 +63,14 @@ export default class Enemy extends Entity {
             });
         }
 
+        if (!this.scene.anims.exists('multiCanon')) {
+            this.scene.anims.create({
+                key: 'multiCanon',
+                frames: [{key: 'sprites', frame: 'spaceShips_007.png'},],
+                frameRate: 4,
+            });
+        }
+
         this.arcadeBody.setCircle(this.displayWidth / 2);
     }
 
