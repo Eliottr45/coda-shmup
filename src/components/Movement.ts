@@ -1,6 +1,5 @@
 import Entity from "../entities/Entity.ts";
 import IComponent from "./IComponent.ts";
-import Enemy from "../entities/Enemy.ts";
 import {ShipMovementData} from "../gameData/ShipMovementData.ts";
 
 export default class Movement implements IComponent {
@@ -8,6 +7,8 @@ export default class Movement implements IComponent {
 
     private _movementData: ShipMovementData;
     private _speed: number = 0;
+    private _elapsed = 0;
+    private _startX = 0;
 
 
     public constructor(movementData: ShipMovementData, speed?: number) {
@@ -35,18 +36,32 @@ export default class Movement implements IComponent {
         entity.y += this._speed * deltaTime;
     }
 
-    public moveSinus(entityEnemy: Enemy, deltaTime: number) {
-        if (!this.enabled)
+    public reset(x: number) {
+        this._elapsed = 0;
+        this._startX = x;
+    }
+
+    public moveSinus(entity: Entity, deltaTime: number) {
+        if (!this.enabled || this._movementData.type != 'sinus')
             return;
-        entityEnemy.x = entityEnemy.x + Math.sin(deltaTime * this._movementData.frequency) * this._movementData.amplitude;
+
+        if(this._startX == null){
+            this._startX = entity.x;
+        }
+
+        this._elapsed += deltaTime / 1000;
+        const {amplitude, frequency} = this._movementData;
+
+        entity.y += this._speed * deltaTime;
+        entity.x = this._startX + Math.sin(this._elapsed * frequency * Math.PI * 2) * amplitude;
+
     }
 
     public move(entity: Entity, deltaTime: number) {
-        if(this._movementData.type == 'sinus'){
-
-        }
-        if(this._movementData.type == 'vertical'){
-            return this.moveVertically(entity, deltaTime);
-        }
+        if (this._movementData.type === 'sinus')
+            this.moveSinus(entity, deltaTime);
+        else
+            this.moveVertically(entity, deltaTime);
     }
+
 }
