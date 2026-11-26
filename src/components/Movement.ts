@@ -3,7 +3,7 @@ import IComponent from "./IComponent.ts";
 import {ShipMovementData} from "../gameData/ShipMovementData.ts";
 
 export default class Movement implements IComponent {
-    public enabled: boolean = true;
+  public enabled: boolean = true;
 
     private _movementData?: ShipMovementData;
     private _speed: number = 0;
@@ -16,24 +16,24 @@ export default class Movement implements IComponent {
         }
         this._movementData = movementData;
     }
+    this._movementData = movementData;
+  }
 
-    public setSpeed(speed: number) {
-        this._speed = speed;
-    }
+  public setSpeed(speed: number) {
+    this._speed = speed;
+  }
 
-    public moveHorizontally(entity: Entity, deltaTime: number) {
-        if (!this.enabled)
-            return;
+  public moveHorizontally(entity: Entity, deltaTime: number) {
+    if (!this.enabled) return;
 
-        entity.x += this._speed * deltaTime;
-    }
+    entity.x += this._speed * deltaTime;
+  }
 
-    public moveVertically(entity: Entity, deltaTime: number) {
-        if (!this.enabled)
-            return;
+  public moveVertically(entity: Entity, deltaTime: number) {
+    if (!this.enabled) return;
 
-        entity.y += this._speed * deltaTime;
-    }
+    entity.y += this._speed * deltaTime;
+  }
 
     // Called when a pooled entity is enabled again, so the sine wave restarts from its spawn position
     public reset(x: number) {
@@ -58,4 +58,5 @@ export default class Movement implements IComponent {
         else
             this.moveVertically(entity, deltaTime);
     }
+  }
 }

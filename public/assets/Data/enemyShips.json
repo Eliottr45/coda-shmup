@@ -5,14 +5,20 @@
       "speedMovement": 0.6,
       "amplitude": 150,
       "frequency": 3
-
     },
     "texture": "spaceShips_007",
     "body": {
       "radius": 42,
       "offsetX": -4,
       "offsetY": 16
-    }
+    },
+    "weapons": [
+      {
+        "bulletCount": 3,
+        "spreadAngle": 0,
+        "fireDelay": 1.2
+      }
+    ]
   },
   "2": {
     "movement": {
@@ -25,6 +31,13 @@
       "radius": 42,
       "offsetX": -4,
       "offsetY": 16
-    }
+    },
+    "weapons": [
+      {
+        "bulletCount": 1,
+        "spreadAngle": 0,
+        "fireDelay": 1000
+      }
+    ]
   }
 }
