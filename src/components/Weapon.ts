@@ -1,6 +1,6 @@
 import { Physics } from "phaser";
 import { BulletData } from "../gameData/BulletData.ts";
-import { ShipWeaponData } from "../gameData/ShipWeaponData.ts";
+import { WeaponData } from "../gameData/WeaponData.ts";
 import Bullet from "../entities/Bullet.ts";
 import Entity from "../entities/Entity.ts";
 import IComponent from "./IComponent.ts";
@@ -10,7 +10,7 @@ export default class Weapon implements IComponent {
 
   private readonly _bullets: Physics.Arcade.Group;
   private readonly _bulletData: BulletData;
-private _weaponData: ShipWeaponData = {
+  private _weaponData: WeaponData = {
     bulletCount: 1,
     spreadAngle: 0,
     fireDelay: 0,
@@ -19,7 +19,7 @@ private _weaponData: ShipWeaponData = {
   constructor(
     bullets: Physics.Arcade.Group,
     bulletData: BulletData,
-    weaponData?: ShipWeaponData,
+    weaponData?: WeaponData,
   ) {
     if (!bullets) {
       console.error("Weapon 'bullets' group cannot be null or undefined");
@@ -32,7 +32,7 @@ private _weaponData: ShipWeaponData = {
     }
   }
 
-  public setWeaponData(weaponData: ShipWeaponData) {
+  public setWeaponData(weaponData: WeaponData) {
     this._weaponData = weaponData;
   }
 
