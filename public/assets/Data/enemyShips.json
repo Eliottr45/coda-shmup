@@ -2,7 +2,7 @@
   "1": {
     "movement": {
       "type": "sinus",
-      "speed": 0.6,
+      "speedMovement": 0.6,
       "amplitude": 150,
       "frequency": 3
     },
@@ -23,7 +23,8 @@
   "2": {
     "movement": {
       "type": "vertical",
-      "speed": 0.6
+      "speedMovement": 0.6
+
     },
     "texture": "ufoRed",
     "body": {
