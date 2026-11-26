@@ -1,34 +1,56 @@
 {
   "1": {
+    "spawnDelay": 4000,
     "movement": {
       "type": "sinus",
-      "speed": 0.6,
+      "speedMovement": 0.6,
       "amplitude": 150,
       "frequency": 0.5
-
     },
     "texture": "spaceShips_007",
     "shootAnimKey": "spaceShip07",
-    "shootFrames": ["spaceShips_007", "ufoRed-shoot0", "ufoRed-shoot1"],
+    "shootFrames": [
+      "spaceShips_007",
+      "ufoRed-shoot0",
+      "ufoRed-shoot1"
+    ],
     "body": {
       "radius": 42,
       "offsetX": -4,
       "offsetY": 16
-    }
+    },
+    "weapons": [
+      {
+        "bulletCount": 3,
+        "spreadAngle": 30,
+        "fireDelay": 1200
+      }
+    ]
   },
   "2": {
+    "spawnDelay": 2000,
     "movement": {
       "type": "vertical",
-      "speed": 0.6
-
+      "speedMovement": 0.6
     },
     "texture": "ufoRed",
     "shootAnimKey": "ufoRedShoot",
-    "shootFrames": ["ufoRed", "ufoRed-shoot0", "ufoRed-shoot1"],
+    "shootFrames": [
+      "ufoRed",
+      "ufoRed-shoot0",
+      "ufoRed-shoot1"
+    ],
     "body": {
       "radius": 42,
       "offsetX": -4,
       "offsetY": 16
-    }
+    },
+    "weapons": [
+      {
+        "bulletCount": 1,
+        "spreadAngle": 0,
+        "fireDelay": 1000
+      }
+    ]
   }
 }

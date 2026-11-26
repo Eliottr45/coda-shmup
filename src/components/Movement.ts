@@ -1,6 +1,6 @@
 import Entity from "../entities/Entity.ts";
 import IComponent from "./IComponent.ts";
-import {ShipMovementData} from "../gameData/ShipMovementData.ts";
+import { ShipMovementData } from "../gameData/ShipMovementData.ts";
 
 export default class Movement implements IComponent {
     public enabled: boolean = true;
@@ -20,9 +20,9 @@ export default class Movement implements IComponent {
         this.setMovementData(this._movementData);
     }
 
-    public setSpeed(speed: number) {
-        this._speed = speed;
-    }
+  public setSpeed(speed: number) {
+    this._speed = speed;
+  }
 
     public setMovementData(movementData: ShipMovementData) {
         this._movementData = movementData;
@@ -43,20 +43,19 @@ export default class Movement implements IComponent {
         if (!this.enabled)
             return;
 
-        entity.x += this._speed * deltaTime;
-    }
+entity.x += this._speed * deltaTime;
+  }
 
-    public moveVertically(entity: Entity, deltaTime: number) {
-        if (!this.enabled)
-            return;
+  public moveVertically(entity: Entity, deltaTime: number) {
+    if (!this.enabled) return;
 
-        entity.y += this._speed * deltaTime;
-    }
+    entity.y += this._speed * deltaTime;
+  }
 
-    public reset(x: number) {
-        this._elapsed = 0;
-        this._startX = x;
-    }
+  public reset(x: number) {
+    this._elapsed = 0;
+    this._startX = x;
+  }
 
     public moveSinus(entity: Entity, deltaTime: number) {
         if (!this.enabled || this._type != 'sinus')
