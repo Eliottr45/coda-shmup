@@ -4,8 +4,8 @@
 			"image": "gameSprites.png",
 			"format": "RGBA8888",
 			"size": {
-				"w": 540,
-				"h": 257
+				"w": 250,
+				"h": 592
 			},
 			"scale": 1,
 			"frames": [
@@ -14,83 +14,20 @@
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 172,
-						"h": 151
+						"w": 151,
+						"h": 172
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 172,
-						"h": 151
+						"w": 151,
+						"h": 172
 					},
 					"frame": {
 						"x": 2,
 						"y": 2,
-						"w": 172,
-						"h": 151
-					}
-				},
-				{
-					"filename": "ufoRed-shoot0",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 91,
-						"h": 91
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 91,
-						"h": 91
-					},
-					"frame": {
-						"x": 178,
-						"y": 2,
-						"w": 91,
-						"h": 91
-					}
-				},
-				{
-					"filename": "ufoRed-shoot1",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 91,
-						"h": 91
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 91,
-						"h": 91
-					},
-					"frame": {
-						"x": 273,
-						"y": 2,
-						"w": 91,
-						"h": 91
-					}
-				},
-				{
-					"filename": "ufoRed",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 91,
-						"h": 91
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 91,
-						"h": 91
-					},
-					"frame": {
-						"x": 368,
-						"y": 2,
-						"w": 91,
-						"h": 91
+						"w": 151,
+						"h": 172
 					}
 				},
 				{
@@ -108,8 +45,8 @@
 						"h": 112
 					},
 					"frame": {
-						"x": 463,
-						"y": 2,
+						"x": 2,
+						"y": 178,
 						"w": 75,
 						"h": 112
 					}
@@ -129,8 +66,8 @@
 						"h": 99
 					},
 					"frame": {
-						"x": 178,
-						"y": 97,
+						"x": 2,
+						"y": 294,
 						"w": 75,
 						"h": 99
 					}
@@ -151,9 +88,72 @@
 					},
 					"frame": {
 						"x": 2,
-						"y": 157,
+						"y": 397,
 						"w": 75,
 						"h": 98
+					}
+				},
+				{
+					"filename": "ufoRed-shoot0",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 91,
+						"h": 91
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 91,
+						"h": 91
+					},
+					"frame": {
+						"x": 2,
+						"y": 499,
+						"w": 91,
+						"h": 91
+					}
+				},
+				{
+					"filename": "ufoRed-shoot1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 91,
+						"h": 91
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 91,
+						"h": 91
+					},
+					"frame": {
+						"x": 81,
+						"y": 178,
+						"w": 91,
+						"h": 91
+					}
+				},
+				{
+					"filename": "ufoRed",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 91,
+						"h": 91
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 91,
+						"h": 91
+					},
+					"frame": {
+						"x": 157,
+						"y": 2,
+						"w": 91,
+						"h": 91
 					}
 				},
 				{
@@ -171,8 +171,8 @@
 						"h": 26
 					},
 					"frame": {
-						"x": 81,
-						"y": 157,
+						"x": 157,
+						"y": 97,
 						"w": 33,
 						"h": 26
 					}
@@ -192,8 +192,8 @@
 						"h": 24
 					},
 					"frame": {
-						"x": 118,
-						"y": 157,
+						"x": 157,
+						"y": 127,
 						"w": 25,
 						"h": 24
 					}
@@ -213,8 +213,8 @@
 						"h": 24
 					},
 					"frame": {
-						"x": 147,
-						"y": 157,
+						"x": 81,
+						"y": 273,
 						"w": 25,
 						"h": 24
 					}
@@ -234,8 +234,8 @@
 						"h": 24
 					},
 					"frame": {
-						"x": 118,
-						"y": 185,
+						"x": 81,
+						"y": 301,
 						"w": 24,
 						"h": 24
 					}

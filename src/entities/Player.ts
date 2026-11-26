@@ -33,14 +33,13 @@ export default class Player extends Entity {
     }
 
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
-
-        this.selectPlayerShip(1);
-
         this.addComponent(new Health(3, this));
-        this.addComponent(new Movement(this._playerShipData.movement));
+        this.addComponent(new Movement());
         this.addComponent(new Weapon(bulletsGroup, this._bulletData));
 
         this.angle = -90;
+
+        this.selectPlayerShip(1);
 
         this._rateOfFire = 0.5;
         this._lastShotTime = 0;
@@ -65,7 +64,7 @@ export default class Player extends Entity {
         const movementData = this._playerShipData.movement;
         this.arcadeBody.setCircle(bodyData.radius, bodyData.offsetX, bodyData.offsetY);
 
-        this.getComponent(Movement)?.setSpeed(movementData.speedMovement);
+        this.getComponent(Movement)?.setMovementData(movementData);
     }
 
     preUpdate(timeSinceLaunch: number, deltaTime: number) {

@@ -3,6 +3,7 @@ import Health from "../components/Health.ts";
 import Bullet from "../entities/Bullet.ts";
 import Enemy from "../entities/Enemy.ts";
 import Player from "../entities/Player.ts";
+import {EnemyShipData, EnemyShipsData} from "../gameData/EnemyShipData.ts";
 import GroupUtils from "../utils/GroupUtils.ts";
 import GameConstants from "../GameConstants.ts";
 import RegistryConstants from "../RegistryConstants.ts";
@@ -11,15 +12,21 @@ export default class EntityManager extends Plugins.ScenePlugin {
     public static readonly PLUGIN_KEY: string = 'EntityManager';
     public static readonly MAPPING_NAME: string = 'entityManager';
 
+    private static readonly PLAYER_BULLET_POOL_SIZE: number = 64;
+    private static readonly ENEMY_BULLET_POOL_SIZE: number = 512;
+    private static readonly MAX_ACTIVE_ENEMIES: number = 5;
+    private static readonly SPAWN_MARGIN: number = 64;
+    private static readonly PLAYER_SPAWN_BOTTOM_OFFSET: number = 128;
+
     // noinspection JSUnusedGlobalSymbols
     private readonly bulletGroupConfig = {
         classType: Bullet,
-        maxSize: 256,
+        maxSize: EntityManager.ENEMY_BULLET_POOL_SIZE,
         runChildUpdate: true,
         createCallback: (bullet: GameObjects.GameObject) => {
             (bullet as Bullet).init();
         }
-    }
+    };
 
     private _player: Player;
     private _playerBullets: Physics.Arcade.Group;
@@ -28,24 +35,25 @@ export default class EntityManager extends Plugins.ScenePlugin {
 
     constructor(scene: Scene, pluginManager: Plugins.PluginManager) {
         super(scene, pluginManager, EntityManager.PLUGIN_KEY);
-
-        console.log("[EntityManager] Initialized");
     }
 
     destroy() {
         super.destroy();
-
-        console.log("[EntityManager] Destroyed");
     }
 
     public initAndSpawnPlayer(): Player {
-        this._playerBullets = this.scene!.physics.add.group(this.bulletGroupConfig);
-        GroupUtils.populate(64, this._playerBullets);
+        this._playerBullets = this.scene!.physics.add.group({
+            ...this.bulletGroupConfig,
+            maxSize: EntityManager.PLAYER_BULLET_POOL_SIZE
+        });
+        GroupUtils.populate(EntityManager.PLAYER_BULLET_POOL_SIZE, this._playerBullets);
 
-        this._player = new Player(this.scene!, this.scene!.cameras.main.centerX, this.scene!.cameras.main.height - 128);
+        this._player = new Player(
+            this.scene!,
+            this.scene!.cameras.main.centerX,
+            this.scene!.cameras.main.height - EntityManager.PLAYER_SPAWN_BOTTOM_OFFSET
+        );
         this._player.init(this._playerBullets);
-
-        console.log("[EntityManager] Player spawned");
 
         this.game!.events.emit(GameConstants.Events.PLAYER_SPAWNED_EVENT, this._player);
 
@@ -54,7 +62,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
 
     public initEnemies(): Physics.Arcade.Group {
         this._enemyBullets = this.scene!.physics.add.group(this.bulletGroupConfig);
-        GroupUtils.populate(256, this._enemyBullets);
+        GroupUtils.populate(EntityManager.ENEMY_BULLET_POOL_SIZE, this._enemyBullets);
 
         this._enemies = this.scene!.physics.add.group({
             classType: Enemy,
@@ -65,15 +73,15 @@ export default class EntityManager extends Plugins.ScenePlugin {
             }
         });
 
-        // Spawn enemies indefinitely
-        this.scene!.time.addEvent({
-            delay: 1500,
-            callback: this.spawnEnemy,
-            callbackScope: this,
-            loop: true
-        });
-
-        console.log("[EntityManager] Enemies initialized");
+        const enemyShips = this.scene!.cache.json.get('enemyShips') as EnemyShipsData;
+        for (const [id, data] of Object.entries(enemyShips)) {
+            this.scene!.time.addEvent({
+                delay: data.spawnDelay,
+                callback: () => this.spawnEnemy(id, data),
+                callbackScope: this,
+                loop: true
+            });
+        }
 
         return this._enemies;
     }
@@ -104,12 +112,10 @@ export default class EntityManager extends Plugins.ScenePlugin {
 
             this.scene?.cameras.main.shake(100, 0.03);
         });
-
-        console.log("[EntityManager] Group collisions initialized");
     }
 
-    private spawnEnemy() {
-        if (this._enemies.countActive(true) >= 5) {
+    private spawnEnemy(id: string | number, data: EnemyShipData) {
+        if (this._enemies.countActive(true) >= EntityManager.MAX_ACTIVE_ENEMIES) {
             return;
         }
 
@@ -118,10 +124,18 @@ export default class EntityManager extends Plugins.ScenePlugin {
             return;
         }
 
-        enemy.enable(Phaser.Math.Between(64, this.scene!.cameras.main.width - 64), 0, 1);
+        const amplitude = data.movement.type === 'sinus' ? data.movement.amplitude : 0;
+        const frame = this.scene!.textures.getFrame('sprites', data.texture);
+        const halfVisualWidth = frame ? Math.ceil(Math.max(frame.width, frame.height) / 2) : 0;
+        const margin = Math.max(EntityManager.SPAWN_MARGIN, halfVisualWidth);
+
+        const screenWidth = this.scene!.cameras.main.width;
+        const minX = amplitude + margin;
+        const maxX = screenWidth - amplitude - margin;
+        const spawnX = minX <= maxX ? Phaser.Math.Between(minX, maxX) : screenWidth / 2;
+
+        enemy.enable(spawnX, 0, id);
 
         this.game!.events.emit(GameConstants.Events.ENEMY_SPAWNED_EVENT, enemy);
-
-        console.log("[EntityManager] Enemy spawned");
     }
 }

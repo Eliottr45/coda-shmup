@@ -2,7 +2,7 @@
   "1": {
     "movement": {
       "type": "horizontal",
-      "speed": 0.6
+      "speedMovement": 0.6
     },
     "texture": "playerShip1_blue",
     "body": {
@@ -14,7 +14,7 @@
   "2": {
     "movement": {
       "type": "horizontal",
-      "speed": 0.9
+      "speedMovement": 0.9
     },
     "texture": "playerShip2_blue",
     "body": {
@@ -26,7 +26,7 @@
   "3": {
     "movement": {
       "type": "horizontal",
-      "speed": 1.2
+      "speedMovement": 1.2
     },
     "texture": "playerShip3_blue",
     "body": {
