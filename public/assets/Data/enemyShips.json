@@ -1,13 +1,18 @@
 {
   "1": {
+    "spawnDelay": 4000,
+    "texture": "spaceShips_007",
     "movement": {
       "type": "sinus",
       "speed": 0.6,
       "amplitude": 150,
       "frequency": 3
-
     },
-    "texture": "spaceShips_007",
+    "weapon": {
+      "bulletCount": 5,
+      "spreadAngle": 60,
+      "fireDelay": 2500
+    },
     "body": {
       "radius": 42,
       "offsetX": -4,
@@ -15,12 +20,17 @@
     }
   },
   "2": {
+    "spawnDelay": 2000,
+    "texture": "ufoRed",
     "movement": {
       "type": "vertical",
       "speed": 0.6
-
     },
-    "texture": "ufoRed",
+    "weapon": {
+      "bulletCount": 1,
+      "spreadAngle": 0,
+      "fireDelay": 2000
+    },
     "body": {
       "radius": 42,
       "offsetX": -4,
