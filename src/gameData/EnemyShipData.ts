@@ -7,11 +7,11 @@ export type EnemyShipsData = {
 };
 
 export type EnemyShipData = {
-  spawnDelay: number;
-  texture: string;
-  tint?: string | number;
-  movement: ShipMovementData;
-  body: ShipBodyData;
-  weapon?: WeaponData;
-  weapons?: WeaponData[];
-};
+    spawnDelay: number;
+    movement: ShipMovementData;
+    texture: string;
+    shootAnimKey: string;
+    shootFrames: string[];
+    body: ShipBodyData;
+    weapons?: WeaponData[];
+}

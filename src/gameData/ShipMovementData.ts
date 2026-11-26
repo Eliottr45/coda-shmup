@@ -4,6 +4,6 @@ export type ShipMovementData = {
     amplitude: number,
     frequency: number,
 } | {
-    type: 'vertical',
+    type: 'vertical' | 'horizontal',
     speedMovement: number,
 }

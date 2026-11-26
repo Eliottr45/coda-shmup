@@ -33,13 +33,14 @@ export default class Player extends Entity {
     }
 
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
+
+        this.selectPlayerShip(1);
+
         this.addComponent(new Health(3, this));
-        this.addComponent(new Movement());
+        this.addComponent(new Movement(this._playerShipData.movement));
         this.addComponent(new Weapon(bulletsGroup, this._bulletData));
 
         this.angle = -90;
-
-        this.selectPlayerShip(1);
 
         this._rateOfFire = 0.5;
         this._lastShotTime = 0;
@@ -61,9 +62,10 @@ export default class Player extends Entity {
 
         this.setTexture('sprites', this._playerShipData.texture);
         const bodyData = this._playerShipData.body;
+        const movementData = this._playerShipData.movement;
         this.arcadeBody.setCircle(bodyData.radius, bodyData.offsetX, bodyData.offsetY);
 
-        this.getComponent(Movement)?.setSpeed(this._playerShipData.movementSpeed);
+        this.getComponent(Movement)?.setSpeed(movementData.speedMovement);
     }
 
     preUpdate(timeSinceLaunch: number, deltaTime: number) {
@@ -72,13 +74,13 @@ export default class Player extends Entity {
         // Press left or right arrow keys to move the player smoothly horizontally using deltaTime
         if (this._cursorKeys.left.isDown) {
             if (this._cursorKeys.shift.isDown) {
-                this.angle -= this._playerShipData.movementSpeed * deltaTime;
+                this.angle -= this._playerShipData.movement.speedMovement * deltaTime;
             } else {
                 this.getComponent(Movement)?.moveHorizontally(this, -deltaTime);
             }
         } else if (this._cursorKeys.right.isDown) {
             if (this._cursorKeys.shift.isDown) {
-                this.angle += this._playerShipData.movementSpeed * deltaTime;
+                this.angle += this._playerShipData.movement.speedMovement * deltaTime;
             } else {
                 this.getComponent(Movement)?.moveHorizontally(this, deltaTime);
             }

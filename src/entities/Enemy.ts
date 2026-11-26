@@ -3,7 +3,8 @@ import Entity from './Entity.ts';
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";
 import Weapon from "../components/Weapon.ts";
-import {EnemyShipData, EnemyShipsData} from "../gameData/EnemyShipData.tx.ts";
+import {EnemyShipData, EnemyShipsData} from "../gameData/EnemyShipData.ts";
+
 
 export default class Enemy extends Entity {
     private readonly _bulletData: BulletData = {
@@ -73,6 +74,19 @@ export default class Enemy extends Entity {
         this._enemyShipData = enemyShipsData[enemyShipDataId];
 
         this.setTexture('sprites', this._enemyShipData.texture);
+
+        const animKey = this._enemyShipData.shootAnimKey;
+        if (animKey && !this.scene.anims.exists(animKey)) {
+            this.scene.anims.create({
+                key: animKey,
+                frames: this._enemyShipData.shootFrames.map(frameName => ({
+                    key: 'sprites',
+                    frame: frameName
+                })),
+                frameRate: 4,
+            });
+        }
+
         const bodyData = this._enemyShipData.body;
         const movementData = this._enemyShipData.movement;
         this.arcadeBody.setCircle(bodyData.radius, bodyData.offsetX, bodyData.offsetY);
@@ -80,7 +94,8 @@ export default class Enemy extends Entity {
         this.getComponent(Movement)?.setSpeed(movementData.speedMovement);
     }
 
-    public enable(x: number, y: number) {
+    public enable(x: number, y: number, enemyShipId: number) {
+        this.selectEnemyShip(enemyShipId);
         this.enableBody(true, x, y - this.displayHeight, true, true);
         this.getComponent(Movement)?.reset(this.x);
 
@@ -99,9 +114,9 @@ export default class Enemy extends Entity {
     }
 
     private shoot() {
-        this.play('ufoShoot');
+        this.play(this._enemyShipData.shootAnimKey);
         this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-            this.setTexture('sprites', 'ufoRed');
+            this.setTexture('sprites', this._enemyShipData.texture);
 
             this.getComponent(Weapon)?.shoot(this);
             this.scene.sound.play('sfx_laser2');
