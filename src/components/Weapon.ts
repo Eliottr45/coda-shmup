@@ -1,5 +1,6 @@
 import { Physics } from "phaser";
 import { BulletData } from "../gameData/BulletData.ts";
+import { ShipWeaponData } from "../gameData/ShipWeaponData.ts";
 import Bullet from "../entities/Bullet.ts";
 import Entity from "../entities/Entity.ts";
 import IComponent from "./IComponent.ts";
@@ -9,76 +10,70 @@ export default class Weapon implements IComponent {
 
   private readonly _bullets: Physics.Arcade.Group;
   private readonly _bulletData: BulletData;
+private _weaponData: ShipWeaponData = {
+    bulletCount: 1,
+    spreadAngle: 0,
+    fireDelay: 0,
+  };
 
-  constructor(bullets: Physics.Arcade.Group, bulletData: BulletData) {
+  constructor(
+    bullets: Physics.Arcade.Group,
+    bulletData: BulletData,
+    weaponData?: ShipWeaponData,
+  ) {
     if (!bullets) {
       console.error("Weapon 'bullets' group cannot be null or undefined");
     }
 
     this._bullets = bullets;
     this._bulletData = bulletData;
-  }
-
-  public shoot(source: Entity) {
-    if (!this.enabled) return;
-
-    if (!this._bullets) return;
-
-    const bullet: Bullet = this._bullets.get() as Bullet;
-    if (bullet) {
-      // Get forward vector of the source entity
-      const sourceForward: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
-        1,
-        0,
-      ).rotate(source.rotation);
-      const bulletVelocity: Phaser.Math.Vector2 = sourceForward
-        .clone()
-        .scale(this._bulletData.speed);
-      bullet.enable(
-        source.x + sourceForward.x * source.arcadeBody.radius,
-        source.y + sourceForward.y * source.arcadeBody.radius,
-        bulletVelocity.x,
-        bulletVelocity.y,
-        this._bulletData,
-      );
+    if (weaponData) {
+      this._weaponData = weaponData;
     }
   }
 
-  public spreadShoot(source: Entity, spreadAngle: number, bulletCount: number) {
-    if (!this.enabled) return;
+  public setWeaponData(weaponData: ShipWeaponData) {
+    this._weaponData = weaponData;
+  }
 
-    if (!this._bullets) return;
+  public shoot(source: Entity) {
+    if (!this.enabled || !this._bullets) return;
 
-    const bullet: Bullet = this._bullets.get() as Bullet;
+    const bulletCount = Math.max(1, this._weaponData.bulletCount);
+    const spreadAngleRad = Phaser.Math.DegToRad(this._weaponData.spreadAngle);
 
-    const angleStep = spreadAngle / (bulletCount - 1); // écart entre les balles
-    const startAngle = source.rotation - spreadAngle / 2; // angle de départ, gauche de l'éventail
+    let startAngle = source.rotation;
+    let angleStep = 0;
 
-    let angle;
+    if (bulletCount > 1) {
+      angleStep =
+        this._weaponData.spreadAngle >= 360
+          ? spreadAngleRad / bulletCount
+          : spreadAngleRad / (bulletCount - 1);
+      startAngle = source.rotation - spreadAngleRad / 2;
+    }
 
-    if (bullet) {
-      if (bulletCount === 1) {
-        this.shoot(source);
-        return;
-      } else {
-        for (let i = 0; i < bulletCount; i++) {
-          const bullet: Bullet = this._bullets.get() as Bullet;
-          angle = startAngle + i * angleStep;
-          const sourceForward: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
-            1,
-            0,
-          ).rotate(angle);
-          const bulletVelocity: Phaser.Math.Vector2 = sourceForward
-            .clone()
-            .scale(this._bulletData.speed);
-          bullet.enable(
-            source.x + sourceForward.x * source.arcadeBody.radius,
-            source.y + sourceForward.y * source.arcadeBody.radius,
-            bulletVelocity.x,
-            bulletVelocity.y,
-            this._bulletData,
-          );
-        }
+    if (this._bullets) {
+      for (let i = 0; i < bulletCount; i++) {
+        const bullet: Bullet = this._bullets.get() as Bullet;
+        if (!bullet) break;
+
+        const angle = startAngle + i * angleStep;
+        const forward: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
+          1,
+          0,
+        ).rotate(angle);
+        const bulletVelocity: Phaser.Math.Vector2 = forward
+          .clone()
+          .scale(this._bulletData.speed);
+
+        bullet.enable(
+          source.x + forward.x * source.arcadeBody.radius,
+          source.y + forward.y * source.arcadeBody.radius,
+          bulletVelocity.x,
+          bulletVelocity.y,
+          this._bulletData,
+        );
       }
     }
   }
