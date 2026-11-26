@@ -40,7 +40,8 @@ export default class HomeScene extends Phaser.Scene {
         this.load.audio('sfx_laser1', 'Sounds/sfx_laser1.ogg');
         this.load.audio('sfx_laser2', 'Sounds/sfx_laser2.ogg');
     }
-      create() {
+
+    create() {
         this.add.text(this.scale.width / 2, this.scale.width / 2, 'CODA SHMUP',
             {fontSize: '72px', color: '#fff', fontFamily: 'future'}).setOrigin(0.5);
         this.add.text(this.scale.width / 2, this.scale.width / 2 + 72, 'Press SPACE to start',

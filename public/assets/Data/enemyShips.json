@@ -15,8 +15,8 @@
     "weapons": [
       {
         "bulletCount": 3,
-        "spreadAngle": 0,
-        "fireDelay": 1.2
+        "spreadAngle": 30,
+        "fireDelay": 1200
       }
     ]
   },
@@ -24,7 +24,6 @@
     "movement": {
       "type": "vertical",
       "speedMovement": 0.6
-
     },
     "texture": "ufoRed",
     "body": {

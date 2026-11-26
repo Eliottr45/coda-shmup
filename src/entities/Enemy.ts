@@ -1,9 +1,9 @@
-import type { BulletData } from "../gameData/BulletData.ts";
-import Entity from "./Entity.ts";
+import type {BulletData} from '../gameData/BulletData.ts';
+import Entity from './Entity.ts';
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";
 import Weapon from "../components/Weapon.ts";
-import { EnemyShipData, EnemyShipsData } from "../gameData/EnemyShipData.tx.ts";
+import {EnemyShipData, EnemyShipsData} from "../gameData/EnemyShipData.tx.ts";
 
 export default class Enemy extends Entity {
     private readonly _bulletData: BulletData = {
@@ -98,53 +98,16 @@ export default class Enemy extends Entity {
         this._shootTimer.paused = true;
     }
 
-    this.arcadeBody.setCircle(this.displayWidth / 2);
-  }
+    private shoot() {
+        this.play('ufoShoot');
+        this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+            this.setTexture('sprites', 'ufoRed');
 
-  public selectEnemyShip(enemyShipDataId: number) {
-    const enemyShipsData = this.scene.cache.json.get(
-      "enemyShips",
-    ) as EnemyShipsData;
-    this._enemyShipData = enemyShipsData[enemyShipDataId];
+            this.getComponent(Weapon)?.shoot(this);
+            this.scene.sound.play('sfx_laser2');
+        });
+    }
 
-    this.setTexture("sprites", this._enemyShipData.texture);
-    const bodyData = this._enemyShipData.body;
-    const movementData = this._enemyShipData.movement;
-    this.arcadeBody.setCircle(
-      bodyData.radius,
-      bodyData.offsetX,
-      bodyData.offsetY,
-    );
-
-    this.getComponent(Movement)?.setSpeed(movementData.speedMovement);
-  }
-
-  public enable(x: number, y: number) {
-    this.enableBody(true, x, y - this.displayHeight, true, true);
-    this._shootTimer.reset(this._shootTimerConfig);
-
-    // Restore health, in case the enemy is reused from the pool, without emitting events
-    const health = this.getComponent(Health);
-    health?.heal(health!.max, false);
-  }
-
-  public disable() {
-    this.stop();
-    this.removeAllListeners(Phaser.Animations.Events.ANIMATION_COMPLETE);
-
-    this.disableBody(true, true);
-    this._shootTimer.paused = true;
-  }
-
-  private shoot() {
-    this.play("ufoShoot");
-    this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-      this.setTexture("sprites", "ufoRed");
-
-      this.getComponent(Weapon)?.shoot(this);
-      this.scene.sound.play("sfx_laser2");
-    });
-  }
     preUpdate(timeSinceLaunch: number, deltaTime: number) {
         super.preUpdate(timeSinceLaunch, deltaTime)
 

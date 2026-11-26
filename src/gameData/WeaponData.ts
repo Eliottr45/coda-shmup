@@ -1,5 +1,5 @@
 export type WeaponData = {
-  bulletCount: number;
-  spreadAngle: number;
-  fireDelay: number;
-};
+    bulletCount: number;
+    spreadAngle: number; // degrees
+    fireDelay: number; // milliseconds
+}
