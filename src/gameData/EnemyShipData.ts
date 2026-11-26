@@ -8,5 +8,7 @@ export type EnemyShipsData = {
 export type EnemyShipData = {
     movement: ShipMovementData;
     texture: string;
+    shootAnimKey: string;
+    shootFrames: string[];
     body: ShipBodyData;
 }

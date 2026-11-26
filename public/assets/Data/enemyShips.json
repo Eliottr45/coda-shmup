@@ -4,10 +4,12 @@
       "type": "sinus",
       "speed": 0.6,
       "amplitude": 150,
-      "frequency": 3
+      "frequency": 0.5
 
     },
     "texture": "spaceShips_007",
+    "shootAnimKey": "spaceShip07",
+    "shootFrames": ["spaceShips_007", "ufoRed-shoot0", "ufoRed-shoot1"],
     "body": {
       "radius": 42,
       "offsetX": -4,
@@ -21,6 +23,8 @@
 
     },
     "texture": "ufoRed",
+    "shootAnimKey": "ufoRedShoot",
+    "shootFrames": ["ufoRed", "ufoRed-shoot0", "ufoRed-shoot1"],
     "body": {
       "radius": 42,
       "offsetX": -4,

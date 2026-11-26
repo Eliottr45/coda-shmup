@@ -118,7 +118,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
             return;
         }
 
-        enemy.enable(Phaser.Math.Between(64, this.scene!.cameras.main.width - 64), 0);
+        enemy.enable(Phaser.Math.Between(64, this.scene!.cameras.main.width - 64), 0, 1);
 
         this.game!.events.emit(GameConstants.Events.ENEMY_SPAWNED_EVENT, enemy);
 

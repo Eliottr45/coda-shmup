@@ -1,11 +1,12 @@
 import {ShipBodyData} from "./ShipBodyData.ts";
+import {ShipMovementData} from "./ShipMovementData.ts";
 
 export type PlayerShipsData = {
     [key: string]: PlayerShipData
 }
 
 export type PlayerShipData = {
-    movementSpeed: number;
+    movement: ShipMovementData;
     texture: string;
     body: ShipBodyData;
 }
