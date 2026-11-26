@@ -18,13 +18,14 @@ export default class Enemy extends Entity {
     private _enemyShipData: EnemyShipData;
 
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
-        this.selectEnemyShip(1);
-
+        const enemyShipsData = this.scene.cache.json.get('enemyShips') as EnemyShipsData;
+        this._enemyShipData = enemyShipsData[1];
         this.addComponent(new Health(1, this));
-        this.addComponent(new Movement(this._enemyShipData.movement, 0));
+        this.addComponent(new Movement(this._enemyShipData.movement));
         this.addComponent(new Weapon(bulletsGroup, this._bulletData));
 
-        // Listen once per enemy, not on every enable(): pooled enemies are reused many times
+        this.selectEnemyShip(1);
+
         const health = this.getComponent(Health);
         health?.on(Health.CHANGE_EVENT, () => {
             this.setTintFill(0xffffff);
@@ -54,7 +55,6 @@ export default class Enemy extends Entity {
         };
         this._shootTimer = this.scene.time.addEvent(this._shootTimerConfig);
 
-        // Create animation when enemy is about to shoot in the global animation manager
         if (!this.scene.anims.exists('ufoShoot')) {
             this.scene.anims.create({
                 key: 'ufoShoot',
@@ -66,10 +66,6 @@ export default class Enemy extends Entity {
                 frameRate: 4,
             });
         }
-
-
-
-        this.arcadeBody.setCircle(this.displayWidth / 2);
     }
 
     public selectEnemyShip(enemyShipDataId: number) {
@@ -115,7 +111,6 @@ export default class Enemy extends Entity {
     preUpdate(timeSinceLaunch: number, deltaTime: number) {
         super.preUpdate(timeSinceLaunch, deltaTime)
 
-        // Destroy entities when out of screen
         if (this.y > this.scene.cameras.main.height + this.displayHeight) {
             this.disable();
         }
