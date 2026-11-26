@@ -3,6 +3,7 @@ import Entity from './Entity.ts';
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";
 import Weapon from "../components/Weapon.ts";
+import {EnemyShipData, EnemyShipsData} from "../gameData/EnemyShipData.tx.ts";
 
 export default class Enemy extends Entity {
     private readonly _bulletData: BulletData = {
@@ -14,10 +15,13 @@ export default class Enemy extends Entity {
     };
     private _shootTimerConfig: Phaser.Types.Time.TimerEventConfig;
     private _shootTimer: Phaser.Time.TimerEvent;
+    private _enemyShipData: EnemyShipData;
 
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
+        this.selectEnemyShip(1);
+
         this.addComponent(new Health(1, this));
-        this.addComponent(new Movement(0.2));
+        this.addComponent(new Movement(this._enemyShipData.movement, 0));
         this.addComponent(new Weapon(bulletsGroup, this._bulletData));
 
         // Listen once per enemy, not on every enable(): pooled enemies are reused many times
@@ -63,15 +67,21 @@ export default class Enemy extends Entity {
             });
         }
 
-        if (!this.scene.anims.exists('multiCanon')) {
-            this.scene.anims.create({
-                key: 'multiCanon',
-                frames: [{key: 'sprites', frame: 'spaceShips_007.png'},],
-                frameRate: 4,
-            });
-        }
+
 
         this.arcadeBody.setCircle(this.displayWidth / 2);
+    }
+
+    public selectEnemyShip(enemyShipDataId: number) {
+        const enemyShipsData = this.scene.cache.json.get('enemyShips') as EnemyShipsData;
+        this._enemyShipData = enemyShipsData[enemyShipDataId];
+
+        this.setTexture('sprites', this._enemyShipData.texture);
+        const bodyData = this._enemyShipData.body;
+        const movementData = this._enemyShipData.movement;
+        this.arcadeBody.setCircle(bodyData.radius, bodyData.offsetX, bodyData.offsetY);
+
+        this.getComponent(Movement)?.setSpeed(movementData.speedMovement);
     }
 
     public enable(x: number, y: number) {
@@ -110,8 +120,8 @@ export default class Enemy extends Entity {
         }
 
         if (!this.isTinted)
-            this.getComponent(Movement)?.moveVertically(this, deltaTime);
+            this.getComponent(Movement)?.move(this, deltaTime);
         else
-            this.getComponent(Movement)?.moveVertically(this, deltaTime * 0.5);
+            this.getComponent(Movement)?.move(this, deltaTime * 0.5);
     }
 }
