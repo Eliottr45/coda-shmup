@@ -1,6 +1,6 @@
 import Entity from "../entities/Entity.ts";
 import IComponent from "./IComponent.ts";
-import { ShipMovementData } from "../gameData/ShipMovementData.ts";
+import {ShipMovementData} from "../gameData/ShipMovementData.ts";
 
 export default class Movement implements IComponent {
     public enabled: boolean = true;
@@ -43,15 +43,17 @@ export default class Movement implements IComponent {
         if (!this.enabled)
             return;
 
-entity.x += this._speed * deltaTime;
+    entity.x += this._speed * deltaTime;
   }
 
   public moveVertically(entity: Entity, deltaTime: number) {
-    if (!this.enabled) return;
+    if (!this.enabled)
+      return;
 
     entity.y += this._speed * deltaTime;
   }
 
+  // Called when a pooled entity is enabled again, so the sine wave restarts from its spawn position
   public reset(x: number) {
     this._elapsed = 0;
     this._startX = x;
