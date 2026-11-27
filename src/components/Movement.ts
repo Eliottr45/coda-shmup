@@ -14,12 +14,9 @@ export default class Movement implements IComponent {
     private _elapsed: number = 0;
     private _startX: number = 0;
 
-    public constructor(movementData?: ShipMovementData, speed?: number) {
+    public constructor(movementData?: ShipMovementData) {
         if (movementData) {
             this.setMovementData(movementData);
-        }
-        if (speed !== undefined) {
-            this._speed = speed;
         }
     }
 

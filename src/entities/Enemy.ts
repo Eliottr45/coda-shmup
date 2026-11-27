@@ -22,11 +22,8 @@ export default class Enemy extends Entity {
   private _enemyShipData: EnemyShipData;
 
   public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
-    const enemyShipsData = this.scene.cache.json.get(
-      "enemyShips",
-    ) as EnemyShipsData;
-    const defaultId = Object.keys(enemyShipsData)[0];
-    this._enemyShipData = enemyShipsData[defaultId];
+    const defaultId = 2;
+    this.selectEnemyShip(defaultId);
 
     this.addComponent(new Health(1, this));
     this.addComponent(new Movement(this._enemyShipData.movement));
