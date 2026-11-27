@@ -31,7 +31,7 @@ export default class Enemy extends Entity {
     this.addComponent(new Health(1, this));
     this.addComponent(new Movement(this._enemyShipData.movement));
     this.addComponent(
-      new Weapon(bulletsGroup, this._bulletData, this._enemyShipData.weapon),
+      new Weapon(bulletsGroup, this._bulletData),
     );
 
     // Listen once per enemy, not on every enable(): pooled enemies are reused many times
@@ -99,7 +99,6 @@ export default class Enemy extends Entity {
 
     this.getComponent(Movement)?.setMovementData(movementData);
     this.getComponent(Movement)?.setSpeed(movementData.speedMovement);
-    this.getComponent(Weapon)?.setWeaponData(this._enemyShipData.weapon);
 
     if (this._shootTimerConfig) {
       this._shootTimerConfig.delay = this._enemyShipData.weapon.fireDelay;
@@ -140,11 +139,11 @@ export default class Enemy extends Entity {
       this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
         this.setTexture("sprites", this._enemyShipData.texture);
 
-        this.getComponent(Weapon)?.spreadShoot(this, bulletCount, spreadAngle);
+        this.getComponent(Weapon)?.spreadShoot(this, Phaser.Math.DegToRad(spreadAngle), bulletCount);
         this.scene.sound.play("sfx_laser2");
       });
     } else {
-      this.getComponent(Weapon)?.spreadShoot(this, bulletCount, spreadAngle);
+      this.getComponent(Weapon)?.spreadShoot(this, Phaser.Math.DegToRad(spreadAngle), bulletCount);
       this.scene.sound.play("sfx_laser2");
     }
   }
