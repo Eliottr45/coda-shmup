@@ -36,6 +36,7 @@ export default class MainGameScene extends Scene {
         player.getComponent(Health)?.once(Health.DEATH_EVENT, () => {
             // Hide the player and let its explosion play before showing the game over screen
             player.disableBody(true, true);
+            this.sound.play('dead_sound');
             this.time.delayedCall(1000, this.endGame, [], this);
         }, this);
         this.entityManager.initEnemies();

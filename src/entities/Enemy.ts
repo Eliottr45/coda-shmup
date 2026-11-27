@@ -136,13 +136,17 @@ export default class Enemy extends Entity {
       this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
         this.setTexture("sprites", this._enemyShipData.texture);
 
-        this.getComponent(Weapon)?.spreadShoot(this, Phaser.Math.DegToRad(spreadAngle), bulletCount);
-        this.scene.sound.play("sfx_laser2");
+        this.fire(bulletCount, spreadAngle);
       });
     } else {
-      this.getComponent(Weapon)?.spreadShoot(this, Phaser.Math.DegToRad(spreadAngle), bulletCount);
-      this.scene.sound.play("sfx_laser2");
+      this.fire(bulletCount, spreadAngle);
     }
+  }
+
+  private fire(bulletCount: number, spreadAngle: number) {
+    this.getComponent(Weapon)?.spreadShoot(this, Phaser.Math.DegToRad(spreadAngle), bulletCount);
+    // Spread shot (several bullets) has its own sound
+    this.scene.sound.play(bulletCount > 1 ? "triple_shoot" : "sfx_laser2");
   }
 
   preUpdate(timeSinceLaunch: number, deltaTime: number) {

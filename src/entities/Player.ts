@@ -103,7 +103,7 @@ export default class Player extends Entity {
         if (this._spreadKey?.isDown) {
             if (timeSinceLaunch - this._lastSpreadShotTime > this._rateOfFire * 20000) {
                 this.getComponent(Weapon)?.spreadShoot(this, Phaser.Math.DegToRad(30), 3);
-                this.scene.sound.play('sfx_laser1');
+                this.scene.sound.play('triple_shoot');
 
                 this._lastSpreadShotTime = timeSinceLaunch;
                 this.emit(Player.SPREAD_SHOT_EVENT, this._rateOfFire * 20000);

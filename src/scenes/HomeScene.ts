@@ -40,6 +40,8 @@ export default class HomeScene extends Phaser.Scene {
         this.load.json('enemyShips', 'Data/enemyShips.json');
         this.load.audio('sfx_laser1', 'Sounds/sfx_laser1.ogg');
         this.load.audio('sfx_laser2', 'Sounds/sfx_laser2.ogg');
+        this.load.audio('triple_shoot', 'Sounds/triple_shoot.ogg');
+        this.load.audio('dead_sound', 'Sounds/dead_sound.ogg');
     }
 
     create() {
