@@ -10,6 +10,9 @@ export default class MainUIScene extends Scene {
 
     private _hearts: GameObjects.Image[] = [];
     private _scoreText: GameObjects.BitmapText;
+    private _tripleShotHint: GameObjects.Image;
+    private _tripleShotFill: GameObjects.Image;
+    private _tripleShotTimerText: GameObjects.BitmapText;
 
     constructor() {
         super(GameConstants.SceneKeys.MAIN_UI);
@@ -29,6 +32,25 @@ export default class MainUIScene extends Scene {
     // noinspection JSUnusedGlobalSymbols
     create() {
         this.createHeartTexture();
+
+        // Bottom-left hint: C = triple shot
+        this._tripleShotHint = this.add.image(48, this.scale.height - 48, "tripleShotHint")
+            .setOrigin(0, 1)
+            .setScale(0.22);
+
+        // Coloured copy drawn on top, revealed from bottom to top while the cooldown recharges
+        this._tripleShotFill = this.add.image(this._tripleShotHint.x, this._tripleShotHint.y, "tripleShotHint")
+            .setOrigin(0, 1)
+            .setScale(0.22)
+            .setVisible(false);
+
+        // Seconds left, shown to the right of the hint
+        this._tripleShotTimerText = this.add.bitmapText(
+            this._tripleShotHint.x + this._tripleShotHint.displayWidth + 24,
+            this._tripleShotHint.y - this._tripleShotHint.displayHeight / 2,
+            "future-bmp", "", 96)
+            .setOrigin(0, 0.5)
+            .setVisible(false);
 
         let scoreStr: string = "".padStart(GameConstants.MAX_SCORE_DIGITS, "0");
         if (this.registry.has(RegistryConstants.Keys.PLAYER_SCORE))
@@ -57,6 +79,53 @@ export default class MainUIScene extends Scene {
         health.on(Health.CHANGE_EVENT, (current: number) => {
             this.updateHearts(current, true);
         }, this);
+
+        player.on(Player.SPREAD_SHOT_EVENT, this.onSpreadShot, this);
+    }
+
+    // During the cooldown: the hint is greyed out, a coloured copy refills it from bottom to top
+    // and a countdown shows the seconds left. When ready, the hint pops.
+    private onSpreadShot(cooldown: number) {
+        const hint = this._tripleShotHint;
+        const fill = this._tripleShotFill;
+        const timerText = this._tripleShotTimerText;
+        if (!hint || !fill || !timerText) return;
+
+        this.tweens.killTweensOf(hint);
+        this.tweens.killTweensOf(fill);
+        hint.setScale(0.22).setTint(0x555555).setAlpha(0.5);
+
+        const frameWidth = fill.frame.width;
+        const frameHeight = fill.frame.height;
+        fill.setVisible(true).setCrop(0, frameHeight, frameWidth, 0);
+        timerText.setVisible(true).setText(Math.ceil(cooldown / 1000).toString());
+
+        this.tweens.addCounter({
+            from: 0,
+            to: 1,
+            duration: cooldown,
+            onUpdate: (tween) => {
+                const progress = tween.getValue() ?? 0;
+                const visibleHeight = frameHeight * progress;
+                fill.setCrop(0, frameHeight - visibleHeight, frameWidth, visibleHeight);
+
+                const secondsLeft = Math.ceil(cooldown * (1 - progress) / 1000);
+                timerText.setText(secondsLeft.toString());
+            },
+            onComplete: () => {
+                fill.setVisible(false).setCrop();
+                timerText.setVisible(false);
+                hint.clearTint().setAlpha(1);
+
+                this.tweens.add({
+                    targets: hint,
+                    scale: 0.26,
+                    duration: 150,
+                    yoyo: true,
+                    ease: "Quad.easeOut"
+                });
+            }
+        });
     }
 
     // Draws a heart once and stores it as a texture, since the spritesheet has none

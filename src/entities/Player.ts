@@ -7,6 +7,8 @@ import Movement from "../components/Movement.ts";
 import Weapon from "../components/Weapon.ts";
 
 export default class Player extends Entity {
+    public static readonly SPREAD_SHOT_EVENT: string = 'spreadShot';
+
     private readonly _bulletData: BulletData = {
         width: 12,
         height: 4,
@@ -19,6 +21,8 @@ export default class Player extends Entity {
     private _playerShipData: PlayerShipData;
     private _rateOfFire: number;
     private _lastShotTime: number;
+    private _spreadKey?: Phaser.Input.Keyboard.Key;
+    private _lastSpreadShotTime: number = -Infinity;
 
     constructor(scene: Scene, x: number, y: number) {
         super(scene, x, y, 'sprites');
@@ -29,6 +33,7 @@ export default class Player extends Entity {
             this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.ONE).on('down', () => this.selectPlayerShip(1));
             this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.TWO).on('down', () => this.selectPlayerShip(2));
             this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.THREE).on('down', () => this.selectPlayerShip(3));
+            this._spreadKey = this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.C);
         }
     }
 
@@ -92,8 +97,17 @@ export default class Player extends Entity {
             if (timeSinceLaunch - this._lastShotTime > this._rateOfFire * 1000) {
                 this.getComponent(Weapon)?.shoot(this);
                 this.scene.sound.play('sfx_laser1');
-
                 this._lastShotTime = timeSinceLaunch;
+            }
+        }
+        // Press C to spreadshoot
+        if (this._spreadKey?.isDown) {
+            if (timeSinceLaunch - this._lastSpreadShotTime > this._rateOfFire * 20000) {
+                this.getComponent(Weapon)?.spreadShoot(this, Phaser.Math.DegToRad(30), 3);
+                this.scene.sound.play('sfx_laser1');
+
+                this._lastSpreadShotTime = timeSinceLaunch;
+                this.emit(Player.SPREAD_SHOT_EVENT, this._rateOfFire * 20000);
             }
         }
     }
